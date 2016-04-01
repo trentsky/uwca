@@ -55,7 +55,6 @@ public class ActiController extends BaseController {
 		}
 	}    
 	
-	@RequiresPermissions("event:acti:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(Acti acti, HttpServletRequest request, HttpServletResponse response, Model model) {
         Page<Acti> page = actiService.findPage(new Page<Acti>(request, response), acti); 

@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<groupId>com.uwca.operation</groupId>
-	<artifactId>uwcamgt</artifactId>
+	<artifactId>uwca</artifactId>
 	<version>1.2.6</version>
 	<packaging>war</packaging>
-	<name>uwcamgt</name>
+	<name>uwca</name>
 	
 	<!-- 项目属性 -->
 	<properties>
