@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uwca.operation.modules.activity.dao.ActiDao">
+    
+	<select id="get" resultType="Acti">
+		SELECT 
+			* 
+		FROM propaganda 
+		WHERE id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Acti">
+		select id,CASE WHEN location=0 THEN '推荐'
+				       WHEN location=1 THEN '论坛'
+				       WHEN location=2 THEN '找车'
+				       WHEN location=3 THEN '发现'
+				       WHEN location=4 THEN '我'
+		END location,title,
+		CASE WHEN location=1 THEN '一次'
+				       WHEN location=2 THEN '每天一次'
+				       WHEN location=3 THEN '每次启动app'
+				       WHEN location=4 THEN '打开链接后不再提示'
+		END showtype,
+		picurl,
+		date_format(startpushtime,'%Y-%m-%d %H:%i:%s') startpushtime,
+		date_format(endpushtime,'%Y-%m-%d %H:%i:%s') endpushtime,
+		date_format(createtime,'%Y-%m-%d %H:%i:%s') createtime,
+		date_format(edittime,'%Y-%m-%d %H:%i:%s') edittime from propaganda where state=1 order by edittime desc
+	</select>
+	
+	<select id="findAreasList" parameterType="string" resultType="string">
+		select DISTINCT a.`name` from propaganda_area_appconfig t 
+		LEFT JOIN areas a on t.areaid=a.areaid where t.propagandaid=#{actiId}
+	</select>
+	
+	<select id="findPlatformsList" parameterType="string" resultType="string">
+		select DISTINCT CONCAT(CASE WHEN app=1 THEN 'iPhone' ELSE 'Android' END,':',a.version) 
+		from propaganda_area_appconfig t LEFT JOIN appconfig a on t.appconfigid=a.id where t.propagandaid=#{actiId}
+	</select>
+	
+	<select id="findAllList" resultType="Acti">
+		SELECT 
+			* 
+		FROM sys_dict 
+		WHERE del_flag = #{DEL_FLAG_NORMAL} 
+		ORDER BY type, sort, update_date DESC
+	</select>
+	
+	<select id="findTypeList" resultType="string">
+		SELECT 
+			type 
+		FROM sys_dict 
+		WHERE del_flag = #{DEL_FLAG_NORMAL} 
+		GROUP BY type
+		ORDER BY type
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO propaganda(
+			title, 
+			showtype, 
+			location, 
+			picurl, 
+			targeturl, 
+			startpushtime, 
+			endpushtime 
+		) VALUES (
+			#{title}, 
+			#{showtype}, 
+			#{location}, 
+			#{picurl}, 
+			#{targeturl}, 
+			#{startpushtime}, 
+			#{endpushtime}
+		)
+	</insert>
+	
+	<insert id="savePropRecord" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO propaganda_area_appconfig(
+			propagandaid, 
+			areaid, 
+			appconfigid
+		) VALUES (
+			#{propagandaid}, 
+			#{areaid}, 
+			#{appconfigid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_dict SET 
+			value = #{value}, 
+			label = #{label}, 
+			type = #{type}, 
+			description = #{description}, 
+			sort = #{sort}, 
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_dict SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
