@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uwca.operation.modules.api.assure.dao.AssureDao">
+
+	<select id="getAssureCompanys"
+		resultType="com.uwca.operation.modules.api.assure.entity.po.Assure">
+		select
+		a.id,b.mobile,b.name,c.companyname,a.assureid,a.assuredid,a.money,a.state
+		from assure a,user b,company c
+		where a.assureid=b.id and b.companyid=c.id and b.mobile=#{mobile} and
+		a.state !=3
+	</select>
+
+	<select id="getAssuredCompanys"
+		resultType="com.uwca.operation.modules.api.assure.entity.po.Assure">
+		select
+		a.id,b.mobile,b.name,c.companyname,a.assureid,a.assuredid,a.money,a.state
+		from assure a,user b,company c
+		where a.assuredid=b.id and b.companyid=c.id and a.mobile=#{mobile} and
+		a.state !=3
+	</select>
+
+	<update id="delAssureCompany">
+		update assure set state=3 where id=#{id}
+	</update>
+
+	<insert id="insert">
+		INSERT INTO assure(
+		id,
+		assureid,
+		assuredid,
+		money
+		)
+		VALUES (
+		#{id},
+		#{assureid},
+		#{assuredid},
+		#{money}
+		)
+	</insert>
+
+	<select id="getAssureCompanyByid"
+		resultType="com.uwca.operation.modules.api.assure.entity.po.Assure">
+		select * from assure where id = #{id} and state=0
+	</select>
+
+</mapper>

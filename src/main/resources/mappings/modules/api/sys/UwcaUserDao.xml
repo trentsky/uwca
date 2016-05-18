@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uwca.operation.modules.api.sys.dao.UwcaUserDao">
+	<insert id="insert" parameterType="com.uwca.operation.modules.api.sys.entity.po.UwcaUser">
+		INSERT INTO user(
+		id,
+		mobile,
+		passwd,
+		companyid,
+		name,
+		deviceid,
+		position
+		) VALUES (
+		#{id},
+		#{mobile},
+		#{passwd},
+		#{companyid},
+		#{name},
+		#{deviceid},
+		#{position}
+		)
+	</insert>
+
+	<select id="isExistUser" resultType="com.uwca.operation.modules.api.sys.entity.po.UwcaUser">
+		select id from user where
+		mobile=#{mobile}
+	</select>
+
+	<select id="getUserInfoByMobile"
+		resultType="com.uwca.operation.modules.api.sys.entity.po.UserInfo">
+		select u.id
+		userid,u.companyid,u.mobile,u.passwd,c.itemcheckstate from user u left join
+		company c on u.companyid=c.id where u.mobile=#{mobile}
+	</select>
+	
+	<update id="modifyPasswd" parameterType="map">
+		update user set passwd=#{passwd} where mobile=#{mobile}
+	</update>
+	
+	<select id="getLastLoginDevice" parameterType="string" resultType="string">
+		select deviceid from user where mobile=#{mobile}
+	</select>
+	
+	<update id="updateLoginDevice" parameterType="map">
+		update user set deviceid = #{deviceid} where mobile=#{mobile}
+	</update>
+</mapper>

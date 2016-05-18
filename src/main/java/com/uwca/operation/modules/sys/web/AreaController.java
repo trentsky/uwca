@@ -17,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.uwca.operation.common.config.Global;
 import com.uwca.operation.common.utils.StringUtils;
 import com.uwca.operation.common.web.BaseController;
 import com.uwca.operation.modules.sys.entity.Area;
@@ -77,10 +76,6 @@ public class AreaController extends BaseController {
 	@RequiresPermissions("sys:area:edit")
 	@RequestMapping(value = "save")
 	public String save(Area area, Model model, RedirectAttributes redirectAttributes) {
-		if(Global.isDemoMode()){
-			addMessage(redirectAttributes, "演示模式，不允许操作！");
-			return "redirect:" + adminPath + "/sys/area";
-		}
 		if (!beanValidator(model, area)){
 			return form(area, model);
 		}
@@ -92,10 +87,6 @@ public class AreaController extends BaseController {
 	@RequiresPermissions("sys:area:edit")
 	@RequestMapping(value = "delete")
 	public String delete(Area area, RedirectAttributes redirectAttributes) {
-		if(Global.isDemoMode()){
-			addMessage(redirectAttributes, "演示模式，不允许操作！");
-			return "redirect:" + adminPath + "/sys/area";
-		}
 //		if (Area.isRoot(id)){
 //			addMessage(redirectAttributes, "删除区域失败, 不允许删除顶级区域或编号为空");
 //		}else{

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uwca.operation.modules.api.company.dao.CompanyDao">
+	<insert id="insert">
+		INSERT INTO company(
+		id,
+		companyname,
+		legalperson,
+		organizationcode,
+		fax,
+		mail,
+		address,
+		website,
+		businesslicense
+		) VALUES (
+		#{id},
+		#{companyname},
+		#{legalperson},
+		#{organizationcode},
+		#{fax},
+		#{mail},
+		#{address},
+		#{website},
+		#{businesslicense}
+		)
+	</insert>
+
+	<select id="isExistCompany"
+		resultType="com.uwca.operation.modules.api.company.entity.po.Company">
+		select id from company where companyname=#{companyname}
+	</select>
+
+	<select id="getCompanyByMobile"
+		resultType="com.uwca.operation.modules.api.company.entity.po.Company">
+		select c.* from company c left join user u on
+		c.id=u.companyid where u.mobile=#{mobile}
+	</select>
+
+	<select id="getCompanyInfoById"
+		resultType="com.uwca.operation.modules.api.company.entity.po.Company">
+		select * from company where id=#{id}
+	</select>
+
+	<update id="updateCompany" parameterType="map">
+		update company set updatetime=now()
+		<if test="companyname != null and companyname !='' ">
+			,companyname=#{companyname}
+		</if>
+		<if test="legalperson != null and legalperson !='' ">
+			,legalperson=#{legalperson}
+		</if>
+		<if test="organizationcode != null and organizationcode !='' ">
+			,organizationcode=#{organizationcode}
+		</if>
+		<if test="businesslicense != null and businesslicense !='' ">
+			,businesslicense=#{businesslicense}
+		</if>
+		<if test="fax != null and fax !='' ">
+			,fax=#{fax}
+		</if>
+		<if test="address != null and address !='' ">
+			,address=#{address}
+		</if>
+		<if test="mail != null and mail !='' ">
+			,mail=#{mail}
+		</if>
+		<if test="website != null and website !='' ">
+			,website=#{website}
+		</if>
+		where id=#{id}
+	</update>
+
+
+	<select id="getCompanyDescs"
+		resultType="com.uwca.operation.modules.api.company.entity.vo.CompanyDscResult">
+		select id,companyid,content from companydescribe where
+		companyid=#{companyid} and
+		isdel=0 order by createtime desc
+	</select>
+
+	<select id="isExistCompanyDesc" resultType="int">
+		select 1 from
+		companydescribe where companyid=#{companyid}
+		and content = #{content} and
+		isdel = 0
+	</select>
+
+	<insert id="addCompanyDesc">
+		insert into companydescribe (
+		id,
+		companyid,
+		content)
+		VALUES (
+		#{id},
+		#{companyid},
+		#{content}
+		)
+	</insert>
+
+	<update id="delCompanyDesc">
+		update companydescribe set isdel = 1 where id =
+		#{descid}
+	</update>
+
+	<select id="searchCompany"
+		resultType="com.uwca.operation.modules.api.company.entity.vo.CompanyResult">
+		SELECT
+			a.id,
+			companyname,
+			legalperson,
+			organizationcode,
+			businesslicense,
+			fax,
+			mail,
+			website,
+			address,
+			state,
+			itemcheckstate,
+			guarantee
+		FROM
+			company a,
+			companydescribe b
+		WHERE
+			a.id = b.companyid
+			and (a.companyname like CONCAT('%',#{searchtext},'%') or b.content like CONCAT('%',#{searchtext},'%'))
+		GROUP BY a.id
+	</select>
+	
+	<select id="getCompanyByUserid" resultType="com.uwca.operation.modules.api.company.entity.po.Company">
+		select * from company a left join user b on a.companyid=b.id where b.id=#{id}
+	</select>
+
+</mapper>

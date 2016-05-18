@@ -40,7 +40,7 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>shiroFilter</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/a/*</url-pattern>
 	</filter-mapping>
 	<filter>
 		<filter-name>sitemeshFilter</filter-name>

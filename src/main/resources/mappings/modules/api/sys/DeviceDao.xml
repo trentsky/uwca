@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uwca.operation.modules.api.sys.dao.DeviceDao">
+	<insert id="insert">
+		INSERT INTO device(
+			id, 
+			mobile, 
+			deviceid, 
+			channelid
+		) VALUES (
+			#{id}, 
+			#{mobile}, 
+			#{deviceid}, 
+			#{channelid}
+		)
+	</insert>
+	
+	<select id="getDeviceByMobile" parameterType="map" resultType="com.uwca.operation.modules.api.sys.entity.po.Device">
+		select * from device where mobile=#{mobile} and deviceid=#{deviceid} and channelid=#{channelid} and status=1
+	</select>
+</mapper>

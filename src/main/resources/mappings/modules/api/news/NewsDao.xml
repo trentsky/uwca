@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uwca.operation.modules.api.news.dao.NewsDao">
+	<insert id="insert">
+		INSERT INTO news(
+		id,
+		userid,
+		companyid,
+		type,
+		title,
+		content
+		) VALUES (
+		#{id},
+		#{userid},
+		#{companyid},
+		#{type},
+		#{title},
+		#{content}
+		)
+	</insert>
+
+	<select id="getNews" resultType="com.uwca.operation.modules.api.news.entity.po.News">
+		select
+		id,userid,companyid,type,title,content from
+		news where userid=#{userid}
+		and companyid=#{companyid} and
+		type=#{type} and title=#{title} and
+		isdel=0
+	</select>
+
+	<select id="getNewsById" resultType="com.uwca.operation.modules.api.news.entity.po.News">
+		select
+		id,userid,companyid,type,title,content from
+		news where id = #{id}
+	</select>
+
+	<select id="getNewsByType"
+		resultType="com.uwca.operation.modules.api.news.entity.vo.NewsResult">
+		select id,userid,companyid,type,title,content from
+		news
+		where isdel=0
+		and type = #{type} order by createtime desc
+		limit #{pageindex},#{endpage}
+	</select>
+
+	<update id="delNews">
+		update news set isdel=1 where id = #{id}
+	</update>
+
+	<update id="modifyNews">
+		update news set updatetime=now()
+		<if test="title != null and title != ''">
+			,title=#{title}
+		</if>
+		<if test="content != null and content != ''">
+			,content=#{content}
+		</if>
+		where id = #{id}
+	</update>
+
+	<select id="searchNews"
+		resultType="com.uwca.operation.modules.api.news.entity.vo.NewsResult">
+		select id,userid,companyid,title,content from news where
+		isdel=0 and (title like CONCAT('%',#{text},'%') or content like CONCAT('%',#{text},'%'))
+	</select>
+</mapper>
