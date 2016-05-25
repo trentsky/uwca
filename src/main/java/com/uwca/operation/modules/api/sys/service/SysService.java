@@ -115,7 +115,7 @@ public class SysService extends CrudService<UwcaUserDao, UwcaUser> {
 		String lastLoginDevice = uwcaUserDao.getLastLoginDevice(mobile);
 		if (!deviceid.equals(lastLoginDevice)) {
 			
-			//发送非上次登陆设备
+			//发送非上次登陆设备短信
 			
 			//更新用户表登陆设备标示
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -126,18 +126,18 @@ public class SysService extends CrudService<UwcaUserDao, UwcaUser> {
 		}
 	}
 
-	public void regDevice(String mobile, String deviceid, String channelid) {
+	public void regDevice(String userid, String deviceid, String channelid) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("mobile", mobile);
+		map.put("userid", userid);
 		map.put("deviceid", deviceid);
 		map.put("channelid", channelid);
-		List<Device> list = deviceDao.getDeviceByMobile(map);
+		List<Device> list = deviceDao.getDevicesByUserid(map);
 		if (null == list || list.size() < 1) {
 			Device device = new Device();
 			device.preInsert();
 			device.setChannelid(channelid);
 			device.setDeviceid(deviceid);
-			device.setMobile(mobile);
+			device.setUserid(userid);
 			deviceDao.insert(device);
 		}
 	}

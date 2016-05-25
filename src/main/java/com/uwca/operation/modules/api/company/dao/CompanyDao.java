@@ -8,7 +8,7 @@ import com.uwca.operation.common.persistence.annotation.MyBatisDao;
 import com.uwca.operation.modules.api.company.entity.po.Company;
 import com.uwca.operation.modules.api.company.entity.po.CompanyDescribe;
 import com.uwca.operation.modules.api.company.entity.vo.CompanyDscResult;
-import com.uwca.operation.modules.api.company.entity.vo.CompanyResult;
+import com.uwca.operation.modules.api.company.entity.vo.CompanyInfo;
 
 @MyBatisDao
 public interface CompanyDao extends CrudDao<Company>{
@@ -31,8 +31,10 @@ public interface CompanyDao extends CrudDao<Company>{
 
 	Company getCompanyInfoById(String id);
 
-	List<CompanyResult> searchCompany(String searchtext);
+	List<CompanyInfo> searchCompany(String searchtext);
 
 	Company getCompanyByUserid(String assureid);
+
+	void updateCompanyDesc(Map<String, Object> map);
 
 }

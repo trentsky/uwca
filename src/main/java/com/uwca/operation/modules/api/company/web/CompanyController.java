@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,14 +17,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.uwca.operation.common.config.Global;
+import com.uwca.operation.common.persistence.Page;
 import com.uwca.operation.common.utils.BaseEntity;
-import com.uwca.operation.common.utils.DES3Util;
 import com.uwca.operation.common.utils.Encodes;
 import com.uwca.operation.common.utils.TokenTool;
 import com.uwca.operation.modules.api.company.entity.po.Company;
 import com.uwca.operation.modules.api.company.entity.po.CompanyDescribe;
 import com.uwca.operation.modules.api.company.entity.vo.CompanyDescribeVo;
 import com.uwca.operation.modules.api.company.entity.vo.CompanyDscResult;
+import com.uwca.operation.modules.api.company.entity.vo.CompanyInfo;
 import com.uwca.operation.modules.api.company.entity.vo.CompanyResult;
 import com.uwca.operation.modules.api.company.entity.vo.CompanyVo;
 import com.uwca.operation.modules.api.company.entity.vo.CompanyVo.Result;
@@ -41,22 +41,23 @@ public class CompanyController {
 
 	@RequestMapping(value = "getCompanyInfo")
 	@ResponseBody
-	public CompanyVo getCompanyInfo(@RequestParam("token") String token,
-			@RequestParam("sign") String sign) {
+	public CompanyVo getCompanyInfo(@RequestParam("token") String token) {
 		CompanyVo companyVo = new CompanyVo();
 		Result result = companyVo.new Result();
 
 		try {
-			if (StringUtils.isEmpty(token) || StringUtils.isEmpty(sign)) {
+			if (StringUtils.isEmpty(token)) {
 				companyVo.setReturncode(1);
 				companyVo.setMessage("参数不完整");
 				companyVo.setResult(result);
 				return companyVo;
 			}
-			
-			Company company = companyService.getCompanyInfo(TokenTool.getMobile(token));
+
+			Company company = companyService.getCompanyInfo(TokenTool
+					.getMobile(token));
 			String businesslicense = company.getBusinesslicense();
 			if (StringUtils.isNotEmpty(businesslicense)) {
+				@SuppressWarnings("resource")
 				InputStream in = new FileInputStream("/data/userfiles/"
 						+ businesslicense);
 				if (null != in) {
@@ -86,15 +87,14 @@ public class CompanyController {
 			@RequestParam("companyname") String companyname,
 			@RequestParam("legalperson") String legalperson,
 			@RequestParam("organizationcode") String organizationcode,
-			@RequestParam("fax") String fax,
-			@RequestParam("mail") String mail,
+			@RequestParam("fax") String fax, @RequestParam("mail") String mail,
 			@RequestParam("website") String website,
 			@RequestParam("address") String address,
 			@RequestParam("businesslicense") MultipartFile businesslicense,
 			@RequestParam("sign") String sign) {
 		CompanyVo companyVo = new CompanyVo();
 		Result result = companyVo.new Result();
-		
+
 		try {
 			if (StringUtils.isEmpty(token) || StringUtils.isEmpty(sign)) {
 				companyVo.setReturncode(1);
@@ -119,10 +119,11 @@ public class CompanyController {
 					return companyVo;
 				}
 			}
-			
+
 			Map<String, Object> map = new HashMap<String, Object>();
 			String companyid = TokenTool.getCompanyid(token);
 			map.put("id", companyid);
+			map.put("userid", TokenTool.getUserid(token));
 			map.put("companyname", companyname);
 			map.put("legalperson", legalperson);
 			map.put("organizationcode", organizationcode);
@@ -131,6 +132,7 @@ public class CompanyController {
 			map.put("mail", mail);
 			map.put("address", address);
 			map.put("website", website);
+			map.put("state", 1);
 			companyService.updateCompany(map);
 			Company company = companyService.getCompanyInfoById(companyid);
 			CompanyResult companyResult = new CompanyResult();
@@ -154,18 +156,23 @@ public class CompanyController {
 	@ResponseBody
 	public CompanyDescribeVo getCompanyDescs(
 			@RequestParam("token") String token,
-			@RequestParam("sign") String sign) {
+			@RequestParam("pagesize") int pagesize,
+			@RequestParam("pageindex") int pageindex) {
 		CompanyDescribeVo companyDescribeVo = new CompanyDescribeVo();
 		com.uwca.operation.modules.api.company.entity.vo.CompanyDescribeVo.Result result = companyDescribeVo.new Result();
 		try {
-			if (StringUtils.isEmpty(token) || StringUtils.isEmpty(sign)) {
+			if (StringUtils.isEmpty(token)) {
 				companyDescribeVo.setReturncode(1);
 				companyDescribeVo.setMessage("参数不完整");
 				companyDescribeVo.setResult(result);
 				return companyDescribeVo;
 			}
-			List<CompanyDscResult> list = companyService.getCompanyDescs(TokenTool.getCompanyid(token));
-			result.setDesc(list);
+			Page<CompanyDscResult> page = companyService.getCompanyDescs(
+					TokenTool.getCompanyid(token), pageindex, pagesize);
+
+			result.setPagecount(page.getTotalPage());
+			result.setRowcount(page.getList().size());
+			result.setList(page.getList());
 			companyDescribeVo.setResult(result);
 			companyDescribeVo.setReturncode(0);
 			companyDescribeVo.setMessage("ok");
@@ -192,9 +199,9 @@ public class CompanyController {
 				baseEntity.setMessage("参数不完整");
 				return baseEntity;
 			}
-			
+
 			String companyid = TokenTool.getCompanyid(token);
-			
+
 			if (companyService.isExistCompanyDesc(companyid, content)) {
 				baseEntity.setReturncode(1);
 				baseEntity.setMessage("该相关词汇已添加");
@@ -211,6 +218,34 @@ public class CompanyController {
 		} catch (Exception e) {
 			baseEntity.setReturncode(1);
 			baseEntity.setMessage("添加相关词汇信息异常");
+			e.printStackTrace();
+			return baseEntity;
+		}
+	}
+
+	@RequestMapping(value = "modifyCompanyDesc")
+	@ResponseBody
+	public BaseEntity modifyCompanyDesc(@RequestParam("id") String id,
+			@RequestParam("content") String content,
+			@RequestParam("sign") String sign) {
+		BaseEntity baseEntity = new BaseEntity();
+		try {
+			if (StringUtils.isEmpty(id) || StringUtils.isEmpty(sign)
+					|| StringUtils.isEmpty(content)) {
+				baseEntity.setReturncode(1);
+				baseEntity.setMessage("参数不完整");
+				return baseEntity;
+			}
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", id);
+			map.put("content", content);
+			companyService.updateCompanyDesc(map);
+			baseEntity.setReturncode(0);
+			baseEntity.setMessage("ok");
+			return baseEntity;
+		} catch (Exception e) {
+			baseEntity.setReturncode(1);
+			baseEntity.setMessage("修改相关词汇信息异常");
 			e.printStackTrace();
 			return baseEntity;
 		}
@@ -256,35 +291,30 @@ public class CompanyController {
 		}
 
 	}
-	
+
 	@RequestMapping(value = "searchCompany")
 	@ResponseBody
 	public CompanysVo searchCompany(@RequestParam("text") String text,
-			@RequestParam("sign") String sign) {
+			@RequestParam("token") String token,
+			@RequestParam("pagesize") int pagesize,
+			@RequestParam("pageindex") int pageindex) {
+		
 		CompanysVo companysVo = new CompanysVo();
 		com.uwca.operation.modules.api.company.entity.vo.CompanysVo.Result result = companysVo.new Result();
 
 		try {
-			if (StringUtils.isEmpty(text) || StringUtils.isEmpty(sign)) {
+			if (StringUtils.isEmpty(text)||StringUtils.isEmpty(token)) {
 				companysVo.setReturncode(1);
 				companysVo.setMessage("参数不完整");
 				companysVo.setResult(result);
 				return companysVo;
 			}
-			
-			List<CompanyResult> companys = companyService.searchCompany(text);
-			for (CompanyResult companyResult:companys) {
-				String businesslicense = companyResult.getBusinesslicense();
-				if (StringUtils.isNotEmpty(businesslicense)) {
-					InputStream in = new FileInputStream("/data/userfiles/"
-							+ businesslicense);
-					if (null != in) {
-						byte[] bytes = new byte[in.available()];
-						companyResult.setBusinesslicense(Encodes.encodeBase64(bytes));
-					}
-				}
-			}
-			result.setCompanys(companys);
+
+			Page<CompanyInfo> page = companyService.searchCompany(pageindex,pagesize,text,TokenTool.getUserid(token));
+
+			result.setPagecount(page.getTotalPage());
+			result.setRowcount(page.getList().size());
+			result.setList(page.getList());
 			companysVo.setResult(result);
 			companysVo.setReturncode(0);
 			companysVo.setMessage("ok");

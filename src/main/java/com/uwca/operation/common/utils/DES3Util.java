@@ -13,16 +13,16 @@ public class DES3Util {
 	public static void main(String[] args) throws Exception {
 		String originValue = "63f0e061bc904cefa66abaec68c419a3|18001270896|123456|79add738178c45e1a7028aed61ba84a0";
 		System.out.println(encode(originValue));
-		System.out.println(decrypt(encode(originValue), key));
+		System.out.println(decrypt("IoiD7AIeVyi4EAHN5RTOZ0F5CQ4_EKb7C_E-zJ1Tt5oB0_WTrTMtUtJazD4VUMvzndbnBa_fbU3lECb2wxskE77oRtfeRpa6O9eVMjAGakts--25NTKskw||", key));
 
 	}
 	
 	public static String encode(String originValue) throws Exception{
-		return encrypt(originValue,key).replace("+", "-").replace("/", "_");
+		return encrypt(originValue,key).replace("+", "-").replace("/", "_").replace("=", "|");
 	}
 	
 	public static String decode(String secretStr) throws Exception{
-		secretStr = secretStr.replace("-", "+").replace("_", "/");
+		secretStr = secretStr.replace("-", "+").replace("_", "/").replace("|", "=");
 		return decrypt(secretStr,key);
 	}
 

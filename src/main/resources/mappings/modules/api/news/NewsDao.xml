@@ -28,19 +28,19 @@
 		isdel=0
 	</select>
 
-	<select id="getNewsById" resultType="com.uwca.operation.modules.api.news.entity.po.News">
+	<select id="getNewsById" resultType="com.uwca.operation.modules.api.news.entity.vo.NewsDetailResult">
 		select
 		id,userid,companyid,type,title,content from
 		news where id = #{id}
 	</select>
 
-	<select id="getNewsByType"
-		resultType="com.uwca.operation.modules.api.news.entity.vo.NewsResult">
-		select id,userid,companyid,type,title,content from
-		news
-		where isdel=0
-		and type = #{type} order by createtime desc
-		limit #{pageindex},#{endpage}
+	<select id="getNewsByType" resultType="com.uwca.operation.modules.api.news.entity.vo.NewsResult">
+		select a.id,a.type,a.title,b.companyname,a.createtime from
+		news a left join company b on a.companyid=b.id where isdel=0
+		<if test="_parameter != 0">
+			and type = #{type}
+		</if>
+		 order by createtime desc
 	</select>
 
 	<update id="delNews">
@@ -60,7 +60,10 @@
 
 	<select id="searchNews"
 		resultType="com.uwca.operation.modules.api.news.entity.vo.NewsResult">
-		select id,userid,companyid,title,content from news where
-		isdel=0 and (title like CONCAT('%',#{text},'%') or content like CONCAT('%',#{text},'%'))
+		select a.id,a.type,a.title,b.companyname,a.createtime from
+		news a left join company b on a.companyid=b.id where isdel=0
+		and (title like CONCAT('%',#{text},'%') or
+		content like
+		CONCAT('%',#{text},'%')) order by createtime desc
 	</select>
 </mapper>

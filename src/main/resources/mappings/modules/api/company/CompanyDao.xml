@@ -42,7 +42,7 @@
 	</select>
 
 	<update id="updateCompany" parameterType="map">
-		update company set updatetime=now()
+		update company set updatetime=now(),state=#{state}
 		<if test="companyname != null and companyname !='' ">
 			,companyname=#{companyname}
 		</if>
@@ -66,6 +66,12 @@
 		</if>
 		<if test="website != null and website !='' ">
 			,website=#{website}
+		</if>
+		<if test="guarantee != null and guarantee !='' ">
+			,guarantee=#{guarantee}
+		</if>
+		<if test="starlevel != 0 ">
+			,starlevel=#{starlevel}
 		</if>
 		where id=#{id}
 	</update>
@@ -103,20 +109,10 @@
 	</update>
 
 	<select id="searchCompany"
-		resultType="com.uwca.operation.modules.api.company.entity.vo.CompanyResult">
+		resultType="com.uwca.operation.modules.api.company.entity.vo.CompanyInfo">
 		SELECT
 			a.id,
-			companyname,
-			legalperson,
-			organizationcode,
-			businesslicense,
-			fax,
-			mail,
-			website,
-			address,
-			state,
-			itemcheckstate,
-			guarantee
+			companyname
 		FROM
 			company a,
 			companydescribe b
@@ -127,7 +123,11 @@
 	</select>
 	
 	<select id="getCompanyByUserid" resultType="com.uwca.operation.modules.api.company.entity.po.Company">
-		select * from company a left join user b on a.companyid=b.id where b.id=#{id}
+		select a.* from company a left join user b on a.id=b.companyid where b.id=#{id}
 	</select>
+	
+	<update id="updateCompanyDesc">
+		update companydescribe set content=#{content},updatetime=now() where id=#{id}
+	</update>
 
 </mapper>

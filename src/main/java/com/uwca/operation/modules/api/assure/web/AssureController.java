@@ -1,8 +1,6 @@
 package com.uwca.operation.modules.api.assure.web;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.uwca.operation.common.persistence.Page;
 import com.uwca.operation.common.utils.BaseEntity;
 import com.uwca.operation.common.utils.TokenTool;
 import com.uwca.operation.modules.api.assure.entity.po.Assure;
+import com.uwca.operation.modules.api.assure.entity.vo.AssureResult;
 import com.uwca.operation.modules.api.assure.entity.vo.AssureVo;
 import com.uwca.operation.modules.api.assure.entity.vo.AssureVo.Result;
 import com.uwca.operation.modules.api.assure.service.AssureService;
@@ -28,33 +28,39 @@ public class AssureController {
 	@RequestMapping(value = "getAssureCompanys")
 	@ResponseBody
 	public AssureVo getAssureCompany(@RequestParam("token") String token,
-			@RequestParam("type") String type, @RequestParam("sign") String sign) {
+			@RequestParam("pagesize") int pagesize,
+			@RequestParam("pageindex") int pageindex,
+			@RequestParam("type") String type) {
 		AssureVo assureVo = new AssureVo();
 		Result result = assureVo.new Result();
 
 		try {
-			if (StringUtils.isEmpty(token) || StringUtils.isEmpty(sign)
-					|| StringUtils.isEmpty(type)) {
+			if (StringUtils.isEmpty(token)||StringUtils.isEmpty(type)) {
 				assureVo.setReturncode(1);
 				assureVo.setMessage("参数不完整");
 				assureVo.setResult(result);
 				return assureVo;
 			}
-			
+
 			String mobile = TokenTool.getMobile(token);
-			List<Assure> list = new ArrayList<Assure>();
+			Page<AssureResult> page = new Page<AssureResult>();
 			// type=1 获取我担保的企业 2:获取担保我的企业
 			if ("1".equals(type)) {
-				list = assureService.getAssureCompanys(mobile);
+				page = assureService.getAssureCompanys(pageindex, pagesize,
+						mobile);
 			} else if ("2".equals(type)) {
-				list = assureService.getAssuredCompanys(mobile);
+				page = assureService.getAssuredCompanys(pageindex, pagesize,
+						mobile);
 			} else {
 				assureVo.setReturncode(1);
 				assureVo.setMessage("type 参数传递错误");
 				assureVo.setResult(result);
 				return assureVo;
 			}
-			result.setAssures(list);
+			result.setPagecount(page.getTotalPage());
+			result.setRowcount(page.getList().size());
+			result.setList(page.getList());
+			assureVo.setResult(result);
 			assureVo.setReturncode(0);
 			assureVo.setMessage("ok");
 			return assureVo;
@@ -90,20 +96,26 @@ public class AssureController {
 			return baseEntity;
 		}
 	}
-	
+
 	@RequestMapping(value = "reviewedAssureCompany")
 	@ResponseBody
 	public BaseEntity reviewedAssureCompany(@RequestParam("id") String id,
-			@RequestParam("sign") String sign) {
-
+			@RequestParam("type") String type, @RequestParam("sign") String sign) {
 		BaseEntity baseEntity = new BaseEntity();
 		try {
-			if (StringUtils.isEmpty(id) || StringUtils.isEmpty(sign)) {
+			if (StringUtils.isEmpty(id) || StringUtils.isEmpty(sign)
+					|| StringUtils.isEmpty(type)) {
 				baseEntity.setReturncode(1);
 				baseEntity.setMessage("参数不完整");
 				return baseEntity;
 			}
-			String message = assureService.reviewedAssureCompany(id);
+			//1：同意 2：拒绝
+			String message = assureService.reviewedAssureCompany(id,type);
+			if (!"ok".equals(message)) {
+				baseEntity.setReturncode(1);
+				baseEntity.setMessage(message);
+				return baseEntity;
+			}
 			baseEntity.setReturncode(0);
 			baseEntity.setMessage("ok");
 			return baseEntity;
@@ -144,10 +156,10 @@ public class AssureController {
 			return baseEntity;
 		} catch (Exception e) {
 			baseEntity.setReturncode(1);
-			baseEntity.setMessage("删除担保企业信息异常");
+			baseEntity.setMessage("申请担保异常");
 			e.printStackTrace();
 			return baseEntity;
 		}
 	}
-	
+
 }

@@ -6,15 +6,16 @@ import com.uwca.operation.common.persistence.DataEntity;
 public class Device extends DataEntity<Device>{
 	
 	private static final long serialVersionUID = 1L;
-	private String mobile;
+	private String userid;
 	private String deviceid;
 	private String channelid;
 	private int islogin;
-	public String getMobile() {
-		return mobile;
+	
+	public String getUserid() {
+		return userid;
 	}
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
 	public String getDeviceid() {
 		return deviceid;
@@ -34,6 +35,5 @@ public class Device extends DataEntity<Device>{
 	public void setIslogin(int islogin) {
 		this.islogin = islogin;
 	}
-	
 	
 }

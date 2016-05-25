@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uwca.operation.modules.api.push.dao.PushLogDao">
+
+	<insert id="addPushLog">
+		INSERT INTO pushlog(
+		id,
+		pushtitle,
+		pushcontent,
+		fromuserid,
+		touserid,
+		type,
+		msgid,
+		parameter
+		) VALUES (
+		#{id},
+		#{pushtitle},
+		#{pushcontent},
+		#{fromuserid},
+		#{touserid},
+		#{type},
+		#{msgid},
+		#{parameter}
+		)
+	</insert>
+
+	<select id="getPushLogs"
+		resultType="com.uwca.operation.modules.api.push.entity.vo.PushLogResult">
+		select id,pushtitle from pushlog where 1=1
+		<if test="type != 2 ">
+			and touserid=#{userid}
+		</if>
+		<if test="type == 2 ">
+			and type = 2
+		</if>
+		
+		order by createtime desc
+	</select>
+
+	<select id="getPushLogByid"
+		resultType="com.uwca.operation.modules.api.push.entity.vo.PushLogDetailResult">
+		select * from pushlog where id = #{id}
+	</select>
+
+</mapper>

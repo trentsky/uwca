@@ -13,16 +13,27 @@ public class NewsVo extends BaseEntity{
 
 	public class Result {
 		
-		List<NewsResult> news = new ArrayList<NewsResult>();
-
-		public List<NewsResult> getNews() {
-			return news;
+		private long pagecount;
+		private long rowcount;
+		private List<NewsResult> list = new ArrayList<NewsResult>();
+		public long getPagecount() {
+			return pagecount;
 		}
-
-		public void setNews(List<NewsResult> news) {
-			this.news = news;
+		public void setPagecount(long pagecount) {
+			this.pagecount = pagecount;
 		}
-		
+		public long getRowcount() {
+			return rowcount;
+		}
+		public void setRowcount(long rowcount) {
+			this.rowcount = rowcount;
+		}
+		public List<NewsResult> getList() {
+			return list;
+		}
+		public void setList(List<NewsResult> list) {
+			this.list = list;
+		}
 	}
 
 	public Result getResult() {

@@ -30,7 +30,12 @@ public class LogInterceptor extends BaseService implements HandlerInterceptor {
 	        logger.debug("开始计时: {}  URI: {}", new SimpleDateFormat("hh:mm:ss.SSS")
 	        	.format(beginTime), request.getRequestURI());
 		}
+		
 		return true;
+	}
+
+	private void checkSign() {
+		
 	}
 
 	@Override

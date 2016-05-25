@@ -107,27 +107,25 @@ public class RegController {
 
 	@RequestMapping(value = "modifyPaasswd")
 	@ResponseBody
-	public BaseEntity modifyPaasswd(@RequestParam("token") String token,
+	public BaseEntity modifyPaasswd(@RequestParam("mobile") String mobile,
 			@RequestParam("code") String code,
 			@RequestParam("passwd") String passwd,
 			@RequestParam("sign") String sign) {
 		BaseEntity baseEntity = new BaseEntity();
 		try {
 
-			if (StringUtils.isEmpty(token) || StringUtils.isEmpty(code)
+			if (StringUtils.isEmpty(mobile) || StringUtils.isEmpty(code)
 					|| StringUtils.isEmpty(passwd) || StringUtils.isEmpty(sign)) {
 				baseEntity.setReturncode(1);
 				baseEntity.setMessage("参数不完整");
 				return baseEntity;
 			}
 			
-			String mobile = TokenTool.getMobile(token);
-			
-			if (!sysService.isExistVerifyCode(mobile, code)) {
-				baseEntity.setReturncode(1);
-				baseEntity.setMessage("验证码错误");
-				return baseEntity;
-			}
+//			if (!sysService.isExistVerifyCode(mobile, code)) {
+//				baseEntity.setReturncode(1);
+//				baseEntity.setMessage("验证码错误");
+//				return baseEntity;
+//			}
 
 			if (!sysService.isExistUser(mobile)) {
 				baseEntity.setReturncode(1);
@@ -164,13 +162,13 @@ public class RegController {
 				baseEntity.setMessage("参数不完整");
 				return baseEntity;
 			}
-			String mobile = TokenTool.getMobile(token);
-			if (!sysService.isExistUser(mobile)) {
+			String userid = TokenTool.getUserid(token);
+			if (!sysService.isExistUser(userid)) {
 				baseEntity.setReturncode(1);
 				baseEntity.setMessage("用户不存在");
 				return baseEntity;
 			}
-			sysService.regDevice(mobile, deviceid, channelid);
+			sysService.regDevice(userid, deviceid, channelid);
 		} catch (Exception e) {
 			baseEntity.setReturncode(1);
 			baseEntity.setMessage("设备注册失败");

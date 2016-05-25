@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uwca.operation.modules.cpy.dao.CpyDao">
+
+	<select id="findList" resultType="com.uwca.operation.modules.cpy.entity.Cpy">
+		SELECT
+		a. NAME username,
+		a.mobile,
+		b.companyname,
+		b.legalperson,
+		b.organizationcode,
+		fax,
+		website,
+		mail,
+		address,
+		businesslicense,
+		b.createtime,
+		b.state
+		FROM
+		company b
+		LEFT JOIN user a ON a.companyid = b.id
+		where b.createtime between #{starttime} and #{endtime}
+		<if test="username != null and username != ''">
+			and a.name=#{username}
+		</if>
+		<if test="companyname != null and companyname != ''">
+			and b.companyname=#{companyname}
+		</if>
+		ORDER BY
+		b.createtime DESC,
+		b.state ASC
+	</select>
+</mapper>

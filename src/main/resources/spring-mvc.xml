@@ -111,6 +111,7 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="${adminPath}/**" />
+			<!-- <mvc:mapping path="/api/**" /> -->
 			<mvc:exclude-mapping path="${adminPath}/" />
 			<mvc:exclude-mapping path="${adminPath}/login" />
 			<mvc:exclude-mapping path="${adminPath}/sys/menu/tree" />

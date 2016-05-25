@@ -13,14 +13,28 @@ public class CompanysVo extends BaseEntity{
 	private Result result;
 
 	public class Result {
-		private List<CompanyResult> companys = new ArrayList<CompanyResult>();
-
-		public List<CompanyResult> getCompanys() {
-			return companys;
+		
+		private long pagecount;
+		private long rowcount;
+		private List<CompanyInfo> list = new ArrayList<CompanyInfo>();
+		
+		public long getPagecount() {
+			return pagecount;
 		}
-
-		public void setCompanys(List<CompanyResult> companys) {
-			this.companys = companys;
+		public void setPagecount(long pagecount) {
+			this.pagecount = pagecount;
+		}
+		public long getRowcount() {
+			return rowcount;
+		}
+		public void setRowcount(long rowcount) {
+			this.rowcount = rowcount;
+		}
+		public List<CompanyInfo> getList() {
+			return list;
+		}
+		public void setList(List<CompanyInfo> list) {
+			this.list = list;
 		}
 	}
 

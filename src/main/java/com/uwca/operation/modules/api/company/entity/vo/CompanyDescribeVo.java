@@ -12,14 +12,26 @@ public class CompanyDescribeVo extends BaseEntity{
 
 	public class Result {
 		
-		List<CompanyDscResult> desc = new ArrayList<CompanyDscResult>();
-
-		public List<CompanyDscResult> getDesc() {
-			return desc;
+		private long pagecount;
+		private long rowcount;
+		List<CompanyDscResult> list = new ArrayList<CompanyDscResult>();
+		public long getPagecount() {
+			return pagecount;
 		}
-
-		public void setDesc(List<CompanyDscResult> desc) {
-			this.desc = desc;
+		public void setPagecount(long pagecount) {
+			this.pagecount = pagecount;
+		}
+		public long getRowcount() {
+			return rowcount;
+		}
+		public void setRowcount(long rowcount) {
+			this.rowcount = rowcount;
+		}
+		public List<CompanyDscResult> getList() {
+			return list;
+		}
+		public void setList(List<CompanyDscResult> list) {
+			this.list = list;
 		}
 	}
 

@@ -1,7 +1,6 @@
 package com.uwca.operation.modules.api.news.web;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,10 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.uwca.operation.common.persistence.Page;
 import com.uwca.operation.common.utils.BaseEntity;
 import com.uwca.operation.common.utils.TokenTool;
 import com.uwca.operation.modules.api.news.entity.po.News;
 import com.uwca.operation.modules.api.news.entity.po.StoreNews;
+import com.uwca.operation.modules.api.news.entity.vo.NewsDetailResult;
+import com.uwca.operation.modules.api.news.entity.vo.NewsDetailVo;
 import com.uwca.operation.modules.api.news.entity.vo.NewsResult;
 import com.uwca.operation.modules.api.news.entity.vo.NewsVo;
 import com.uwca.operation.modules.api.news.entity.vo.NewsVo.Result;
@@ -37,8 +39,8 @@ public class NewsController {
 
 		BaseEntity baseEntity = new BaseEntity();
 		try {
-			if (StringUtils.isEmpty(token)
-					|| StringUtils.isEmpty(type) || StringUtils.isEmpty(title)
+			if (StringUtils.isEmpty(token) || StringUtils.isEmpty(type)
+					|| StringUtils.isEmpty(title)
 					|| StringUtils.isEmpty(content)
 					|| StringUtils.isEmpty(sign)) {
 				baseEntity.setReturncode(1);
@@ -71,22 +73,17 @@ public class NewsController {
 
 	@RequestMapping(value = "getNews")
 	@ResponseBody
-	public BaseEntity getNews(@RequestParam("pagesize") int pagesize,
+	public NewsVo getNews(@RequestParam("pagesize") int pagesize,
 			@RequestParam("pageindex") int pageindex,
-			@RequestParam("type") String type, @RequestParam("sign") String sign) {
+			@RequestParam("type") int type) {
 		NewsVo newsVo = new NewsVo();
 		Result result = newsVo.new Result();
 		try {
-			if (StringUtils.isEmpty(type) || StringUtils.isEmpty(sign)) {
-				newsVo.setReturncode(1);
-				newsVo.setMessage("参数不完整");
-			}
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("pagesize", pagesize);
-			map.put("pageindex", pageindex);
-			map.put("type", type);
-			List<NewsResult> list = newsService.getNewsByType(map);
-			result.setNews(list);
+			Page<NewsResult> page = newsService.getNewsByType(pageindex,
+					pagesize, type);
+			result.setPagecount(page.getTotalPage());
+			result.setRowcount(page.getList().size());
+			result.setList(page.getList());
 			newsVo.setResult(result);
 			newsVo.setReturncode(0);
 			newsVo.setMessage("ok");
@@ -99,19 +96,49 @@ public class NewsController {
 		}
 	}
 
+	@RequestMapping(value = "getNewsByid")
+	@ResponseBody
+	public NewsDetailVo getNewsByid(@RequestParam("id") String id) {
+		NewsDetailVo newsDetailVo = new NewsDetailVo();
+		com.uwca.operation.modules.api.news.entity.vo.NewsDetailVo.Result result = newsDetailVo.new Result();
+		try {
+			if (StringUtils.isEmpty(id)) {
+				newsDetailVo.setReturncode(1);
+				newsDetailVo.setMessage("参数不完整");
+			}
+			NewsDetailResult newsDetailResult = newsService.getNewsByid(id);
+			result.setNews(newsDetailResult);
+			newsDetailVo.setResult(result);
+			newsDetailVo.setReturncode(0);
+			newsDetailVo.setMessage("ok");
+			return newsDetailVo;
+		} catch (Exception e) {
+			newsDetailVo.setReturncode(1);
+			newsDetailVo.setMessage("获取供需信息异常");
+			e.printStackTrace();
+			return newsDetailVo;
+		}
+	}
+
 	@RequestMapping(value = "searchNews")
 	@ResponseBody
-	public BaseEntity searchNews(@RequestParam("text") String text,
-			@RequestParam("sign") String sign) {
+	public BaseEntity searchNews(@RequestParam("token") String token,
+			@RequestParam("pagesize") int pagesize,
+
+			@RequestParam("pageindex") int pageindex,
+			@RequestParam("text") String text) {
 		NewsVo newsVo = new NewsVo();
 		Result result = newsVo.new Result();
 		try {
-			if (StringUtils.isEmpty(text) || StringUtils.isEmpty(sign)) {
+			if (StringUtils.isEmpty(text)||StringUtils.isEmpty(token)) {
 				newsVo.setReturncode(1);
 				newsVo.setMessage("参数不完整");
 			}
-			List<NewsResult> list = newsService.searchNews(text);
-			result.setNews(list);
+			Page<NewsResult> page = newsService.searchNews(pageindex, pagesize,
+					text,TokenTool.getUserid(token));
+			result.setPagecount(page.getTotalPage());
+			result.setRowcount(page.getList().size());
+			result.setList(page.getList());
 			newsVo.setResult(result);
 			newsVo.setReturncode(0);
 			newsVo.setMessage("ok");
@@ -198,9 +225,9 @@ public class NewsController {
 				baseEntity.setMessage("参数不完整");
 				return baseEntity;
 			}
-			
+
 			String userid = TokenTool.getUserid(token);
-			
+
 			if (newsService.isExistStoreNews(userid, newsid)) {
 				baseEntity.setReturncode(1);
 				baseEntity.setMessage("重复收藏");
@@ -244,6 +271,36 @@ public class NewsController {
 			baseEntity.setMessage("取消收藏供需信息异常");
 			e.printStackTrace();
 			return baseEntity;
+		}
+	}
+
+	@RequestMapping(value = "getStoreNews")
+	@ResponseBody
+	public NewsVo getStoreNews(@RequestParam("token") String token,
+			@RequestParam("pagesize") int pagesize,
+			@RequestParam("pageindex") int pageindex) {
+		NewsVo newsVo = new NewsVo();
+		Result result = newsVo.new Result();
+		try {
+			if (StringUtils.isEmpty(token)) {
+				newsVo.setReturncode(1);
+				newsVo.setMessage("参数不完整");
+			}
+
+			Page<NewsResult> page = newsService.getStoreNews(pageindex,
+					pagesize, TokenTool.getUserid(token));
+			result.setPagecount(page.getTotalPage());
+			result.setRowcount(page.getList().size());
+			result.setList(page.getList());
+			newsVo.setResult(result);
+			newsVo.setReturncode(0);
+			newsVo.setMessage("ok");
+			return newsVo;
+		} catch (Exception e) {
+			newsVo.setReturncode(1);
+			newsVo.setMessage("获取收藏供需信息列表异常");
+			e.printStackTrace();
+			return newsVo;
 		}
 	}
 }

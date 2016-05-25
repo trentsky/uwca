@@ -3,7 +3,7 @@
 <mapper namespace="com.uwca.operation.modules.api.assure.dao.AssureDao">
 
 	<select id="getAssureCompanys"
-		resultType="com.uwca.operation.modules.api.assure.entity.po.Assure">
+		resultType="com.uwca.operation.modules.api.assure.entity.vo.AssureResult">
 		select
 		a.id,b.mobile,b.name,c.companyname,a.assureid,a.assuredid,a.money,a.state
 		from assure a,user b,company c
@@ -12,11 +12,11 @@
 	</select>
 
 	<select id="getAssuredCompanys"
-		resultType="com.uwca.operation.modules.api.assure.entity.po.Assure">
+		resultType="com.uwca.operation.modules.api.assure.entity.vo.AssureResult">
 		select
 		a.id,b.mobile,b.name,c.companyname,a.assureid,a.assuredid,a.money,a.state
 		from assure a,user b,company c
-		where a.assuredid=b.id and b.companyid=c.id and a.mobile=#{mobile} and
+		where a.assuredid=b.id and b.companyid=c.id and b.mobile=#{mobile} and
 		a.state !=3
 	</select>
 
@@ -41,7 +41,11 @@
 
 	<select id="getAssureCompanyByid"
 		resultType="com.uwca.operation.modules.api.assure.entity.po.Assure">
-		select * from assure where id = #{id} and state=0
+		select * from assure where id = #{id} and state !=3
 	</select>
+	
+	<update id="updateAssure">
+		update assure set state = #{type} where id = #{id}
+	</update>
 
 </mapper>

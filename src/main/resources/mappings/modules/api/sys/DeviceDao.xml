@@ -4,18 +4,22 @@
 	<insert id="insert">
 		INSERT INTO device(
 			id, 
-			mobile, 
+			userid, 
 			deviceid, 
 			channelid
 		) VALUES (
 			#{id}, 
-			#{mobile}, 
+			#{userid}, 
 			#{deviceid}, 
 			#{channelid}
 		)
 	</insert>
 	
 	<select id="getDeviceByMobile" parameterType="map" resultType="com.uwca.operation.modules.api.sys.entity.po.Device">
-		select * from device where mobile=#{mobile} and deviceid=#{deviceid} and channelid=#{channelid} and status=1
+		select * from device where userid=#{userid} and deviceid=#{deviceid} and channelid=#{channelid} and status=1
+	</select>
+	
+	<select id="getDeviceByuserid" resultType="com.uwca.operation.modules.api.sys.entity.po.Device">
+		select * from device where userid=#{userid} and status=1 order by createtime desc limit 1
 	</select>
 </mapper>

@@ -21,6 +21,7 @@ public class Company extends DataEntity<Company>{
 	private int state;
 	private String itemcheckstate;
 	private BigDecimal guarantee;
+	private int starlevel;
 	public String getCompanyname() {
 		return companyname;
 	}
@@ -98,6 +99,12 @@ public class Company extends DataEntity<Company>{
 	}
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	public int getStarlevel() {
+		return starlevel;
+	}
+	public void setStarlevel(int starlevel) {
+		this.starlevel = starlevel;
 	}
 	
 }

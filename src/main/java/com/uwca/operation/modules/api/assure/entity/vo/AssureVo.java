@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.uwca.operation.common.utils.BaseEntity;
-import com.uwca.operation.modules.api.assure.entity.po.Assure;
 
 public class AssureVo extends BaseEntity{
 
@@ -13,15 +12,28 @@ public class AssureVo extends BaseEntity{
 	private Result result;
 
 	public class Result {
-		List<Assure> assures = new ArrayList<Assure>();
-
-		public List<Assure> getAssures() {
-			return assures;
+		private long pagecount;
+		private long rowcount;
+		List<AssureResult> list = new ArrayList<AssureResult>();
+		public long getPagecount() {
+			return pagecount;
 		}
-
-		public void setAssures(List<Assure> assures) {
-			this.assures = assures;
+		public void setPagecount(long pagecount) {
+			this.pagecount = pagecount;
 		}
+		public long getRowcount() {
+			return rowcount;
+		}
+		public void setRowcount(long rowcount) {
+			this.rowcount = rowcount;
+		}
+		public List<AssureResult> getList() {
+			return list;
+		}
+		public void setList(List<AssureResult> list) {
+			this.list = list;
+		}
+		
 	}
 
 	public Result getResult() {

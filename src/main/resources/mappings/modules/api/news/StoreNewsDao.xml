@@ -13,11 +13,23 @@
 		)
 	</insert>
 
-	<select id="getStoreNews" resultType="com.uwca.operation.modules.api.news.entity.po.StoreNews">
-		select * from storeinfo where userid=#{userid} and newsid=#{userid} and isdel=0
+	<select id="getStoreNews"
+		resultType="com.uwca.operation.modules.api.news.entity.po.StoreNews">
+		select * from storeinfo where userid=#{userid} and
+		newsid=#{newsid} and isdel=0
 	</select>
-	
+
 	<update id="delStoreNews">
 		update storeinfo set isdel = 1 where id = #{id}
 	</update>
+
+	<select id="getStoreNewsByUserid"
+		resultType="com.uwca.operation.modules.api.news.entity.vo.NewsResult">
+		select a.id,a.type,a.title,b.companyname,a.createtime from storeinfo d left join 
+		news a on d.newsid=a.id left join
+		company b on a.companyid=b.id left join user c on a.userid=c.id
+		where
+		a.isdel=0
+		and d.userid=#{userid} order by a.createtime desc
+	</select>
 </mapper>
