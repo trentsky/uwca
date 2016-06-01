@@ -1,8 +1,11 @@
 package com.uwca.operation.modules.api.oplog.entity.vo;
 
+import com.uwca.operation.common.persistence.DataEntity;
 
-public class OplogResult{
+
+public class OplogResult extends DataEntity<OplogResult>{
 	
+	private static final long serialVersionUID = 1L;
 	private String id;
 	private String userid;
 	private int type;

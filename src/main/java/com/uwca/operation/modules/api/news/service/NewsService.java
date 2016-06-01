@@ -54,8 +54,11 @@ public class NewsService extends CrudService<NewsDao, News> {
 	}
 
 	public Page<NewsResult> getNewsByType(int pageindex,int pagesize,int type) {
+		NewsResult newsResult = new NewsResult();
 		Page<NewsResult> page = new Page<NewsResult>(pageindex, pagesize);
-		page.setList(dao.getNewsByType(type));
+		newsResult.setPage(page);
+		newsResult.setType(type);
+		page.setList(dao.getNewsByType(newsResult));
 		return page;
 	}
 
@@ -130,8 +133,11 @@ public class NewsService extends CrudService<NewsDao, News> {
 	}
 
 	public Page<NewsResult> searchNews(int pageindex,int pagesize,String text,String userid) {
+		NewsResult newsResult = new NewsResult();
 		Page<NewsResult> page = new Page<NewsResult>(pageindex, pagesize);
-		page.setList(dao.searchNews(text));
+		newsResult.setPage(page);
+		newsResult.setTitle(text);
+		page.setList(dao.searchNews(newsResult));
 		
 		//操作轨迹
 		Oplog oplog = new Oplog();
@@ -144,15 +150,22 @@ public class NewsService extends CrudService<NewsDao, News> {
 		return page;
 	}
 
-	public Page<NewsResult> getStoreNews(int pageindex, int pagesize,
-			String userid) {
+	public Page<NewsResult> getStoreNews(int pageindex, int pagesize,String userid) {
+		NewsResult newsResult = new NewsResult();
 		Page<NewsResult> page = new Page<NewsResult>(pageindex, pagesize);
-		page.setList(storeNewsDao.getStoreNewsByUserid(userid));
+		newsResult.setPage(page);
+		newsResult.setCompanyname(userid);
+		page.setList(storeNewsDao.getStoreNewsByUserid(newsResult));
 		return page;
 	}
 
 	public NewsDetailResult getNewsByid(String id) {
 		NewsDetailResult newsDetailResult = dao.getNewsById(id);
+		if (null != newsDetailResult) {
+			newsDetailResult.setIsStore((storeNewsDao.getStoreNewsByNewsid(newsDetailResult.getId()))==0?0:1);
+		}
+		
+		
 		//操作轨迹
 		Oplog oplog = new Oplog();
 		oplog.setUserid(newsDetailResult.getUserid());

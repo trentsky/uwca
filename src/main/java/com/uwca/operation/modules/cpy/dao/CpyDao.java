@@ -7,5 +7,6 @@ import com.uwca.operation.modules.cpy.entity.Cpy;
 
 @MyBatisDao
 public interface CpyDao extends CrudDao<Cpy> {
-
+	
+	Cpy getCompanyByid(String id);
 }

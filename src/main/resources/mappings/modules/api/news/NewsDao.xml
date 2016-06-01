@@ -30,14 +30,14 @@
 
 	<select id="getNewsById" resultType="com.uwca.operation.modules.api.news.entity.vo.NewsDetailResult">
 		select
-		id,userid,companyid,type,title,content from
-		news where id = #{id}
+		a.id,a.userid,a.companyid,a.type,a.title,a.content,a.createtime,b.companyname from
+		news a left join company b on a.companyid=b.id where a.id = #{id}
 	</select>
 
 	<select id="getNewsByType" resultType="com.uwca.operation.modules.api.news.entity.vo.NewsResult">
 		select a.id,a.type,a.title,b.companyname,a.createtime from
 		news a left join company b on a.companyid=b.id where isdel=0
-		<if test="_parameter != 0">
+		<if test="type != 0">
 			and type = #{type}
 		</if>
 		 order by createtime desc
@@ -62,8 +62,8 @@
 		resultType="com.uwca.operation.modules.api.news.entity.vo.NewsResult">
 		select a.id,a.type,a.title,b.companyname,a.createtime from
 		news a left join company b on a.companyid=b.id where isdel=0
-		and (title like CONCAT('%',#{text},'%') or
+		and (title like CONCAT('%',#{title},'%') or
 		content like
-		CONCAT('%',#{text},'%')) order by createtime desc
+		CONCAT('%',#{title},'%')) order by createtime desc
 	</select>
 </mapper>

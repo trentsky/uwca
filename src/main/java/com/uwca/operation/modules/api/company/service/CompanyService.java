@@ -47,9 +47,12 @@ public class CompanyService extends CrudService<CompanyDao, Company> {
 
 	public Page<CompanyDscResult> getCompanyDescs(String companyid,
 			int pageindex, int pagesize) {
+		CompanyDscResult companyDscResult = new CompanyDscResult();
 		Page<CompanyDscResult> page = new Page<CompanyDscResult>(pageindex,
 				pagesize);
-		page.setList(dao.getCompanyDescs(companyid));
+		companyDscResult.setId(companyid);
+		companyDscResult.setPage(page);
+		page.setList(dao.getCompanyDescs(companyDscResult));
 		return page;
 	}
 
@@ -71,8 +74,11 @@ public class CompanyService extends CrudService<CompanyDao, Company> {
 
 	public Page<CompanyInfo> searchCompany(int pageindex, int pagesize,
 			String searchtext,String userid) {
+		CompanyInfo companyInfo = new CompanyInfo();
 		Page<CompanyInfo> page = new Page<CompanyInfo>(pageindex, pagesize);
-		page.setList(dao.searchCompany(searchtext));
+		companyInfo.setPage(page);
+		companyInfo.setCompanyname(searchtext);
+		page.setList(dao.searchCompany(companyInfo));
 
 		// 添加操作日志
 		Oplog oplog = new Oplog();

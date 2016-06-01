@@ -11,9 +11,9 @@ import com.uwca.operation.modules.api.assure.entity.vo.AssureResult;
 @MyBatisDao
 public interface AssureDao extends CrudDao<Assure> {
 
-	List<AssureResult> getAssureCompanys(String mobile);
+	List<AssureResult> getAssureCompanys(AssureResult assureResult);
 
-	List<AssureResult> getAssuredCompanys(String mobile);
+	List<AssureResult> getAssuredCompanys(AssureResult assureResult);
 
 	void delAssureCompany(String id);
 

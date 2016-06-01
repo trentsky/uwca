@@ -31,15 +31,20 @@ public class AssureService extends CrudService<AssureDao, Assure>{
 	private OplogService oplogService;
 
 	public Page<AssureResult> getAssureCompanys(int pageindex,int pagesize,String mobile) {
+		AssureResult assureResult = new AssureResult();
 		Page<AssureResult> page = new Page<AssureResult>(pageindex, pagesize);
-		page.setList(assureDao.getAssureCompanys(mobile));
+		assureResult.setPage(page);
+		assureResult.setMobile(mobile);
+		page.setList(assureDao.getAssureCompanys(assureResult));
 		return page;
 	}
 
 	public Page<AssureResult> getAssuredCompanys(int pageindex,int pagesize,String mobile) {
-		
+		AssureResult assureResult = new AssureResult();
 		Page<AssureResult> page = new Page<AssureResult>(pageindex, pagesize);
-		page.setList(assureDao.getAssuredCompanys(mobile));
+		assureResult.setPage(page);
+		assureResult.setMobile(mobile);
+		page.setList(assureDao.getAssuredCompanys(assureResult));
 		return page;
 	}
 

@@ -14,7 +14,7 @@ public interface NewsDao extends CrudDao<News> {
 
 	News getNews(News news);
 
-	List<NewsResult> getNewsByType(int type);
+	List<NewsResult> getNewsByType(NewsResult newsResult);
 
 	void delNews(String id);
 
@@ -22,5 +22,5 @@ public interface NewsDao extends CrudDao<News> {
  
 	void modifyNews(Map<String, Object> map);
 
-	List<NewsResult> searchNews(String text);
+	List<NewsResult> searchNews(NewsResult newsResult);
 }

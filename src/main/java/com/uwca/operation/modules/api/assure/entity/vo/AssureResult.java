@@ -2,8 +2,11 @@ package com.uwca.operation.modules.api.assure.entity.vo;
 
 import java.math.BigDecimal;
 
-public class AssureResult {
+import com.uwca.operation.common.persistence.DataEntity;
+
+public class AssureResult extends DataEntity<AssureResult>{
 	
+	private static final long serialVersionUID = 1L;
 	private String assureid;
 	private String assuredid;
 	private BigDecimal money;

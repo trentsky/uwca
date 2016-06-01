@@ -58,7 +58,7 @@ public class CompanyController {
 			String businesslicense = company.getBusinesslicense();
 			if (StringUtils.isNotEmpty(businesslicense)) {
 				@SuppressWarnings("resource")
-				InputStream in = new FileInputStream("/data/userfiles/"
+				InputStream in = new FileInputStream(Global.getUserfilesBaseDir()
 						+ businesslicense);
 				if (null != in) {
 					byte[] bytes = new byte[in.available()];

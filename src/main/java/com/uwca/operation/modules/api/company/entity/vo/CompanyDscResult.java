@@ -1,7 +1,10 @@
 package com.uwca.operation.modules.api.company.entity.vo;
 
-public class CompanyDscResult {
+import com.uwca.operation.common.persistence.DataEntity;
+
+public class CompanyDscResult extends DataEntity<CompanyDscResult>{
 	
+	private static final long serialVersionUID = 1L;
 	private String id;
 	private String content;
 	public String getId() {

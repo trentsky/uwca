@@ -6,7 +6,10 @@ public class NewsDetailResult {
 	private int type;
 	private String title;
 	private String userid;
+	private String companyname;
+	private int isStore;
 	private String content;
+	private String createtime;
 	public String getId() {
 		return id;
 	}
@@ -37,5 +40,23 @@ public class NewsDetailResult {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	public String getCompanyname() {
+		return companyname;
+	}
+	public void setCompanyname(String companyname) {
+		this.companyname = companyname;
+	}
 	
+	public String getCreatetime() {
+		return createtime;
+	}
+	public void setCreatetime(String createtime) {
+		this.createtime = createtime;
+	}
+	public int getIsStore() {
+		return isStore;
+	}
+	public void setIsStore(int isStore) {
+		this.isStore = isStore;
+	}
 }

@@ -21,7 +21,7 @@ public interface CompanyDao extends CrudDao<Company>{
 
 	void updateCompany(Map<String, Object> map);
 
-	List<CompanyDscResult> getCompanyDescs(String companyid);
+	List<CompanyDscResult> getCompanyDescs(CompanyDscResult companyDscResult);
 
 	Object isExistCompanyDesc(Map<String, Object> map);
 
@@ -31,7 +31,7 @@ public interface CompanyDao extends CrudDao<Company>{
 
 	Company getCompanyInfoById(String id);
 
-	List<CompanyInfo> searchCompany(String searchtext);
+	List<CompanyInfo> searchCompany(CompanyInfo companyInfo);
 
 	Company getCompanyByUserid(String assureid);
 

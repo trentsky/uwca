@@ -1,8 +1,5 @@
 package com.uwca.operation.modules.api.push.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +21,12 @@ public class PushLogService  extends CrudService<PushLogDao, PushLog>{
 	
 	public Page<PushLogResult> getPushLogs(int pageindex, int pagesize,
 			String userid,String type) {
+		PushLogResult pushLogResult = new PushLogResult();
 		Page<PushLogResult> page = new Page<PushLogResult>(pageindex, pagesize);
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userid", userid);
-		map.put("type", type);
-		page.setList(dao.getPushLogs(map));
+		pushLogResult.setPage(page);
+		pushLogResult.setId(userid);
+		pushLogResult.setType(type);
+		page.setList(dao.getPushLogs(pushLogResult));
 		return page;
 	}
 	

@@ -80,7 +80,7 @@
 	<select id="getCompanyDescs"
 		resultType="com.uwca.operation.modules.api.company.entity.vo.CompanyDscResult">
 		select id,companyid,content from companydescribe where
-		companyid=#{companyid} and
+		companyid=#{id} and
 		isdel=0 order by createtime desc
 	</select>
 
@@ -118,7 +118,7 @@
 			companydescribe b
 		WHERE
 			a.id = b.companyid
-			and (a.companyname like CONCAT('%',#{searchtext},'%') or b.content like CONCAT('%',#{searchtext},'%'))
+			and (a.companyname like CONCAT('%',#{companyname},'%') or b.content like CONCAT('%',#{companyname},'%'))
 		GROUP BY a.id
 	</select>
 	

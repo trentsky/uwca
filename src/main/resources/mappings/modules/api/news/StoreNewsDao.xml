@@ -30,6 +30,10 @@
 		company b on a.companyid=b.id left join user c on a.userid=c.id
 		where
 		a.isdel=0
-		and d.userid=#{userid} order by a.createtime desc
+		and d.userid=#{companyname} order by a.createtime desc
+	</select>
+	
+	<select id="getStoreNewsByNewsid" resultType="int">
+		select count(1) from  storeinfo where newsid=#{id}
 	</select>
 </mapper>

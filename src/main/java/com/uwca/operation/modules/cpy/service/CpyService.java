@@ -26,5 +26,9 @@ public class CpyService extends CrudService<CpyDao, Cpy> {
 		return super.findPage(page, company);
 		
 	}
+
+	public Cpy getCompanyByid(String id) {
+		return dao.getCompanyByid(id);
+	}
 	
 }

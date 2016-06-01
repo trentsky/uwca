@@ -1,7 +1,9 @@
 package com.uwca.operation.modules.api.company.entity.vo;
 
-public class CompanyInfo {
-	
+import com.uwca.operation.common.persistence.DataEntity;
+
+public class CompanyInfo extends DataEntity<CompanyInfo>{
+	private static final long serialVersionUID = 1L;
 	private String id;
 	private String companyname;
 	public String getId() {

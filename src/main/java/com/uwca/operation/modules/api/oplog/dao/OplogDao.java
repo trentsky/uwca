@@ -12,6 +12,6 @@ public interface OplogDao extends CrudDao<Oplog>{
 	
 	public void addOplong(Oplog oplog);
 
-	public List<OplogResult> getOplogs(String userid);
+	public List<OplogResult> getOplogs(OplogResult oplogResult);
 	
 }

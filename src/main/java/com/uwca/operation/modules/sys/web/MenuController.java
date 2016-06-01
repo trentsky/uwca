@@ -17,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.uwca.operation.common.config.Global;
 import com.uwca.operation.common.utils.StringUtils;
 import com.uwca.operation.common.web.BaseController;
 import com.uwca.operation.modules.sys.entity.Menu;

@@ -15,6 +15,8 @@ public interface StoreNewsDao extends CrudDao<StoreNews> {
 
 	void delStoreNews(String id);
 
-	List<NewsResult> getStoreNewsByUserid(String userid);
+	List<NewsResult> getStoreNewsByUserid(NewsResult newsResult);
+	
+	int getStoreNewsByNewsid(String id);
 
 }

@@ -1,18 +1,14 @@
 package com.uwca.operation.modules.api.news.entity.vo;
 
+import com.uwca.operation.common.persistence.DataEntity;
 
-public class NewsResult{
-	private String id;
+
+public class NewsResult extends DataEntity<NewsResult>{
+	private static final long serialVersionUID = 1L;
 	private int type;
 	private String title;
 	private String companyname;
 	private String createtime;
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public int getType() {
 		return type;
 	}

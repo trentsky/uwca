@@ -20,8 +20,11 @@ public class OplogService extends CrudService<OplogDao, Oplog>{
 
 	public Page<OplogResult> getOplogs(int pageindex, int pagesize,
 			String userid) {
+		OplogResult oplogResult = new OplogResult();
 		Page<OplogResult> page = new Page<OplogResult>(pageindex, pagesize);
-		page.setList(dao.getOplogs(userid));
+		oplogResult.setPage(page);
+		oplogResult.setUserid(userid);
+		page.setList(dao.getOplogs(oplogResult));
 		return page;
 	}
 }

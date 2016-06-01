@@ -14,7 +14,10 @@
 	</script>
 </head>
 <body>
-	<form:form id="searchForm" modelAttribute="cpy" action="${ctx}/company" method="post" class="breadcrumb form-search ">
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="${ctx}/company/list">公司信息</a></li>
+	</ul><br/>
+	<form:form id="searchForm" modelAttribute="cpy" action="${ctx}/company/list" method="post" class="breadcrumb form-search ">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
@@ -39,8 +42,7 @@
 				<td>${cpy.companyname}</td>
 				<td>${cpy.createtime}</td>
 				<shiro:hasPermission name="sys:user:edit"><td>
-    				<a href="${ctx}/sys/user/form?id=${user.id}">详细</a>
-					<a href="${ctx}/sys/user/form?id=${user.id}">审核</a>
+					<a href="${ctx}/company/getCompanyByid?id=${cpy.id}">审核</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

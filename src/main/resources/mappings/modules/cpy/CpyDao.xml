@@ -4,7 +4,8 @@
 
 	<select id="findList" resultType="com.uwca.operation.modules.cpy.entity.Cpy">
 		SELECT
-		a. NAME username,
+		b.id,
+		a.NAME username,
 		a.mobile,
 		b.companyname,
 		b.legalperson,
@@ -29,5 +30,25 @@
 		ORDER BY
 		b.createtime DESC,
 		b.state ASC
+	</select>
+	
+	<select id="getCompanyByid" resultType="com.uwca.operation.modules.cpy.entity.Cpy">
+		SELECT
+		b.id,
+		a.NAME username,
+		a.mobile,
+		b.companyname,
+		b.legalperson,
+		b.organizationcode,
+		fax,
+		website,
+		mail,
+		address,
+		businesslicense,
+		b.createtime,
+		b.state
+		FROM
+		company b
+		LEFT JOIN user a ON a.companyid = b.id where b.id=#{id}
 	</select>
 </mapper>
